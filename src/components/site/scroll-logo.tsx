@@ -23,8 +23,8 @@ export function ScrollLogo() {
     const paint = (image: HTMLImageElement, frame: number) => {
       if (disposed || frame !== wanted || !image.complete || !image.naturalWidth) return;
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
-      canvas.dataset.frame = String(frame);
-      canvas.dataset.loaded = 'true';
+      canvas.dataset['frame'] = String(frame);
+      canvas.dataset['loaded'] = 'true';
     };
 
     const load = (frame: number) => {
