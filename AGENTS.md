@@ -15,3 +15,4 @@
 - Use only verified original-site photography; missing clinic and clinical photography must be visibly marked as awaiting real images, never replaced by synthetic or stock clinic claims.
 - Keep the site informational with direct WhatsApp scheduling; do not introduce forms, storage or patient diagnostics without a separate request.
 - Defer sitemap origin configuration until the redesigned site's public domain is confirmed; never use the preview origin.
+- Keep the uploaded logo sequence in public/frames-logo with its original numeric filenames; the homepage ScrollLogo canvas uses a bounded frame cache and reduced-motion fallback to preserve performance without changing the surrounding layout.
