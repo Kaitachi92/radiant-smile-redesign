@@ -127,3 +127,10 @@ h1,h2,h3 { color: var(--deep); }
 .brand-symbol,.eyebrow { color: var(--primary); }
 .section:nth-of-type(even) { background: var(--accent); }
 .text-link:hover { color: var(--primary); border-color: var(--primary); }
+.hero-logo-wrap { position: relative; width: 100%; height: 490px; z-index: 1; }
+.hero-logo-poster,.hero-logo-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.hero-logo-canvas { opacity: 0; }
+.hero-logo-canvas[data-loaded=true] { opacity: 1; }
+@media(min-width:1450px) { .hero-logo-wrap { height: 530px; } }
+@media(max-width:900px) { .hero-logo-wrap { height: 430px; } }
+@media(max-width:640px) { .hero-logo-wrap { height: 410px; } }

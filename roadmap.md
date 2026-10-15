@@ -1,4 +1,6 @@
 # Redesign Dra. Rebeca Galdino
+- [x] Extrair os frames enviados preservando os nomes na pasta public/frames-logo.
+- [x] Substituir somente a foto da primeira seção pela animação de rolagem e verificar avanço, retorno e movimento reduzido.
 - [x] Conferir site original e fotos reais.
 - [x] Implementar identidade editorial, páginas e tratamentos.
 - [x] Integrar WhatsApp, endereço, mapa e privacidade.
