@@ -6,12 +6,15 @@ export function logoFramePath(index: number) {
   return `/frames-logo/frame_${String(frame).padStart(6, '0')}.webp`;
 }
 
+// Crop of the 1280x720 source that frames the assembled diamond generously.
+const SOURCE = { x: 200, y: 90, w: 880, h: 560 };
+
 export function ScrollLogo() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas?.getContext('2d');
+    const context = canvas?.getContext('2d', { willReadFrequently: true });
     if (!canvas || !context) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -22,7 +25,19 @@ export function ScrollLogo() {
 
     const paint = (image: HTMLImageElement, frame: number) => {
       if (disposed || frame !== wanted || !image.complete || !image.naturalWidth) return;
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      // Frames have a real black background: key it out so the diamond sits on the page colour.
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(image, SOURCE.x, SOURCE.y, SOURCE.w, SOURCE.h, 0, 0, canvas.width, canvas.height);
+      const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
+      const d = pixels.data;
+      for (let i = 0; i < d.length; i += 4) {
+        const max = Math.max(d[i]!, d[i + 1]!, d[i + 2]!);
+        if (max <= 10) { d[i + 3] = 0; continue; }
+        const alpha = Math.min(1, (max - 10) / 70);
+        if (alpha < 1) { const k = Math.min(255 / max, 1 / alpha); d[i] = d[i]! * k; d[i + 1] = d[i + 1]! * k; d[i + 2] = d[i + 2]! * k; }
+        d[i + 3] = alpha * 255;
+      }
+      context.putImageData(pixels, 0, 0);
       canvas.dataset['frame'] = String(frame);
       canvas.dataset['loaded'] = 'true';
     };
@@ -49,12 +64,14 @@ export function ScrollLogo() {
 
     const update = () => {
       scheduled = 0;
-      const rect = canvas.getBoundingClientRect();
-      const top = rect.top + window.scrollY;
-      const headerHeight = document.querySelector('header')?.getBoundingClientRect().height ?? 0;
-      const start = Math.max(0, top - window.innerHeight * 0.8);
-      const end = Math.max(start + 1, top + rect.height * 0.65 - headerHeight);
-      const progress = Math.max(0, Math.min(1, (window.scrollY - start) / (end - start)));
+      // Progress follows the pinned hero track: full sequence plays while the hero stays sticky.
+      const track = canvas.closest<HTMLElement>('.hero-track');
+      const pinned = canvas.closest<HTMLElement>('.hero');
+      let progress = 1;
+      if (track && pinned) {
+        const distance = Math.max(1, track.offsetHeight - pinned.offsetHeight);
+        progress = Math.max(0, Math.min(1, -track.getBoundingClientRect().top / distance));
+      }
       const frame = reducedMotion.matches ? LOGO_FRAME_COUNT - 1 : Math.round(progress * (LOGO_FRAME_COUNT - 1));
       wanted = frame;
       load(frame);
@@ -79,7 +96,6 @@ export function ScrollLogo() {
   }, []);
 
   return <div className="hero-logo-wrap">
-    <img className="hero-logo-poster" src={logoFramePath(LOGO_FRAME_COUNT - 1)} width={1280} height={720} alt="Diamante roxo do logotipo da Dra. Rebeca Galdino" fetchPriority="high" />
-    <canvas ref={canvasRef} className="hero-logo-canvas" width={1280} height={720} role="img" aria-label="Animação do diamante roxo da Dra. Rebeca Galdino" />
+    <canvas ref={canvasRef} className="hero-logo-canvas" width={880} height={560} role="img" aria-label="Animação do diamante roxo da Dra. Rebeca Galdino" />
   </div>;
 }
