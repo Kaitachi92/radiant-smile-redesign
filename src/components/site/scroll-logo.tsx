@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 
-export const LOGO_FRAME_COUNT = 192;
+export const LOGO_FRAME_COUNT = 300;
 export function logoFramePath(index: number) {
   const frame = Math.max(0, Math.min(LOGO_FRAME_COUNT - 1, Math.round(index)));
-  return `/frames-logo/frame_${String(frame).padStart(6, '0')}.webp`;
+  return `/frames-logo/frame-${String(frame + 1).padStart(4, '0')}.webp`;
 }
 
 // Crop of the 1280x720 source that frames the assembled diamond generously.
@@ -25,16 +25,18 @@ export function ScrollLogo() {
 
     const paint = (image: HTMLImageElement, frame: number) => {
       if (disposed || frame !== wanted || !image.complete || !image.naturalWidth) return;
-      // Frames have a real black background: key it out so the diamond sits on the page colour.
+      // Frames were rendered on a real green screen: key it out so the diamond sits on the page colour.
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.drawImage(image, SOURCE.x, SOURCE.y, SOURCE.w, SOURCE.h, 0, 0, canvas.width, canvas.height);
       const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
       const d = pixels.data;
       for (let i = 0; i < d.length; i += 4) {
-        const max = Math.max(d[i]!, d[i + 1]!, d[i + 2]!);
-        if (max <= 10) { d[i + 3] = 0; continue; }
-        const alpha = Math.min(1, (max - 10) / 70);
-        if (alpha < 1) { const k = Math.min(255 / max, 1 / alpha); d[i] = d[i]! * k; d[i + 1] = d[i + 1]! * k; d[i + 2] = d[i + 2]! * k; }
+        const r = d[i]!, g = d[i + 1]!, b = d[i + 2]!;
+        const other = Math.max(r, b);
+        const spill = g - other;
+        if (spill <= 12) continue;
+        const alpha = Math.max(0, Math.min(1, 1 - (spill - 12) / 30));
+        d[i + 1] = other; // remove green fringe on edges
         d[i + 3] = alpha * 255;
       }
       context.putImageData(pixels, 0, 0);
