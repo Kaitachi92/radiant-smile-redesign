@@ -20,13 +20,13 @@ describe("mobile scroll logo progress", () => {
     expect(progressAt(1000)).toBe(1);
   });
 
-  it("starts with a visible part of the diamond and finishes on the final assembled frame", () => {
-    expect(getMobileAnimationFrame(0)).toBe(44);
-    expect(getMobileAnimationFrame(0.225)).toBe(52);
-    expect(getMobileAnimationFrame(0.45)).toBe(59);
-    expect(getMobileAnimationFrame(0.725)).toBe(179);
+  it("starts on the empty frame and reveals the complete diamond sequence", () => {
+    expect(getMobileAnimationFrame(0)).toBe(0);
+    expect(getMobileAnimationFrame(0.25)).toBe(75);
+    expect(getMobileAnimationFrame(0.5)).toBe(150);
+    expect(getMobileAnimationFrame(0.75)).toBe(224);
     expect(getMobileAnimationFrame(1)).toBe(299);
-    expect(getMobileAnimationFrame(-1)).toBe(44);
+    expect(getMobileAnimationFrame(-1)).toBe(0);
     expect(getMobileAnimationFrame(2)).toBe(299);
   });
 });
