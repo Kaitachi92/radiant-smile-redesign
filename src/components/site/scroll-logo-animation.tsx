@@ -1,9 +1,41 @@
 import { useEffect, useRef, useState } from "react";
 
 const FRAME_COUNT = 300;
+const MOBILE_START_FRAME = 44;
+const MOBILE_ASSEMBLY_END_FRAME = 59;
+const MOBILE_ASSEMBLY_PROGRESS = 0.45;
 const FRAME_DIRECTORY = "/frameia-sequencia";
 const FRAME_CROP = { x: 280, y: 72, width: 720, height: 648 };
 const CHROMA_KEY = { red: 61, green: 137, blue: 66, threshold: 5, feather: 64 };
+
+export function getMobileScrollProgress(
+  scrollY: number,
+  trackTop: number,
+  trackHeight: number,
+  sceneHeight: number,
+  stickyTop: number,
+) {
+  const scrollDistance = Math.max(1, trackHeight - sceneHeight);
+  return Math.max(0, Math.min(1, (scrollY + stickyTop - trackTop) / scrollDistance));
+}
+
+export function getMobileAnimationFrame(progress: number) {
+  const normalizedProgress = Math.max(0, Math.min(1, progress));
+  if (normalizedProgress <= MOBILE_ASSEMBLY_PROGRESS) {
+    return Math.round(
+      MOBILE_START_FRAME +
+        (MOBILE_ASSEMBLY_END_FRAME - MOBILE_START_FRAME) *
+          (normalizedProgress / MOBILE_ASSEMBLY_PROGRESS),
+    );
+  }
+
+  const rotationProgress =
+    (normalizedProgress - MOBILE_ASSEMBLY_PROGRESS) / (1 - MOBILE_ASSEMBLY_PROGRESS);
+  return Math.round(
+    MOBILE_ASSEMBLY_END_FRAME +
+      rotationProgress * (FRAME_COUNT - 1 - MOBILE_ASSEMBLY_END_FRAME),
+  );
+}
 
 export function ScrollLogoAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,6 +76,21 @@ export function ScrollLogoAnimation() {
     let lastCanvasHeight = 0;
 
     const getScrollProgress = () => {
+      const hero = container.closest<HTMLElement>(".hero");
+      const scene = hero?.querySelector<HTMLElement>(".hero-scene");
+
+      if (window.matchMedia("(max-width: 560px)").matches && hero && scene) {
+        const trackTop = hero.getBoundingClientRect().top + window.scrollY;
+        const stickyTop = Number.parseFloat(window.getComputedStyle(scene).top);
+        return getMobileScrollProgress(
+          window.scrollY,
+          trackTop,
+          hero.offsetHeight,
+          scene.offsetHeight,
+          stickyTop,
+        );
+      }
+
       const trackTop = container.getBoundingClientRect().top + window.scrollY;
       const stickyTop = Number.parseFloat(window.getComputedStyle(sticky).top);
       const scrollDistance = container.offsetHeight - sticky.offsetHeight;
@@ -58,7 +105,10 @@ export function ScrollLogoAnimation() {
       if (disposed) return;
 
       const progress = getScrollProgress();
-      const frame = Math.round(progress * (FRAME_COUNT - 1));
+      const isMobile = window.matchMedia("(max-width: 560px)").matches;
+      const frame = isMobile
+        ? getMobileAnimationFrame(progress)
+        : Math.round(progress * (FRAME_COUNT - 1));
 
       const image = images[frame];
       if (
@@ -105,7 +155,9 @@ export function ScrollLogoAnimation() {
         return;
       }
 
-      const scale = Math.min(bounds.width / FRAME_CROP.width, bounds.height / FRAME_CROP.height);
+      const scale =
+        Math.min(bounds.width / FRAME_CROP.width, bounds.height / FRAME_CROP.height) *
+        (isMobile ? 1.12 : 1);
       const width = FRAME_CROP.width * scale;
       const height = FRAME_CROP.height * scale;
 
