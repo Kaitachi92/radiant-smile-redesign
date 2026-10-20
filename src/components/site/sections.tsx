@@ -32,38 +32,41 @@ export type InstagramPost = {
 export function Hero() {
   return (
     <section className="hero">
-      <div className="hero-grid site-width">
-        <div className="hero-copy">
-          <p className="eyebrow">Odontologia em Piracaia</p>
-          <h1>
-            Seu sorriso merece <em>cuidado de verdade.</em>
-          </h1>
-          <p className="hero-description">
-            Um atendimento próximo, cuidadoso e individualizado, com atenção à sua saúde bucal em
-            cada etapa.
-          </p>
-          <div className="hero-actions">
-            <Appointment>Agendar uma consulta</Appointment>
-            <Button variant="editorial" className="editorial-button" asChild>
-              <Link to="/o-consultorio">
-                Conheça o consultório <ArrowUpRight />
-              </Link>
-            </Button>
+      <div className="hero-scene">
+        <div className="hero-grid site-width">
+          <div className="hero-copy">
+            <p className="eyebrow">Odontologia em Piracaia</p>
+            <h1>
+              Seu sorriso merece <em>cuidado de verdade.</em>
+            </h1>
+            <p className="hero-description">
+              Um atendimento próximo, cuidadoso e individualizado, com atenção à sua saúde bucal em
+              cada etapa.
+            </p>
+            <div className="hero-actions">
+              <Appointment>Agendar uma consulta</Appointment>
+              <Button variant="editorial" className="editorial-button" asChild>
+                <Link to="/o-consultorio">
+                  Conheça o consultório <ArrowUpRight />
+                </Link>
+              </Button>
+            </div>
+            <p className="location-note">
+              <MapPin size={15} aria-hidden="true" />
+              Atendimento odontológico em Piracaia — SP.
+            </p>
           </div>
-          <p className="location-note">
-            <MapPin size={15} aria-hidden="true" />
-            Atendimento odontológico em Piracaia — SP.
-          </p>
+          <div className="hero-image-wrap hero-logo-wrap">
+            <ScrollLogoAnimation />
+          </div>
         </div>
-        <div className="hero-image-wrap hero-logo-wrap">
-          <ScrollLogoAnimation />
+        <div className="hero-foot site-width">
+          <span>Presença. Escuta. Cuidado.</span>
+          <span className="hero-scroll-hint">Role para revelar o diamante</span>
+          <a href="#cuidado">
+            Conheça nossa forma de cuidar <ArrowDown size={15} aria-hidden="true" />
+          </a>
         </div>
-      </div>
-      <div className="hero-foot site-width">
-        <span>Presença. Escuta. Cuidado.</span>
-        <a href="#cuidado">
-          Conheça nossa forma de cuidar <ArrowDown size={15} aria-hidden="true" />
-        </a>
       </div>
     </section>
   );
