@@ -23,6 +23,7 @@ describe("App routing", () => {
 
   it("matches every treatment and preserves the original scheduling destination", () => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    expect(treatments).toHaveLength(9);
     for (const treatment of treatments) {
       expect(router.matchRoutes(`/tratamentos/${treatment.slug}`).at(-1)?.routeId).toBe("/tratamentos/$slug");
     }
