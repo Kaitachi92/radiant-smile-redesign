@@ -457,7 +457,19 @@ export function ClinicSection({ full = false }: { full?: boolean }) {
           </div>
         </div>
         <div className="clinic-gallery">
-          <PhotoPending label="Recepção do consultório" />
+          <figure className="clinic-photo">
+            <img
+              src={photos.portrait}
+              alt="Dra. Rebeca Galdino em seu consultório, ao lado de uma imagem digital odontológica."
+              width="1200"
+              height="1600"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption className="image-caption">
+              Dra. Rebeca Galdino no consultório · retrato divulgado no site oficial.
+            </figcaption>
+          </figure>
           <PhotoPending label="Sala de atendimento" />
           {full && (
             <>
@@ -468,8 +480,8 @@ export function ClinicSection({ full = false }: { full?: boolean }) {
         </div>
         {full && (
           <p className="notice">
-            As fotografias da clínica e dos ambientes aguardam envio e autorização de uso. Nenhuma
-            imagem de outro consultório foi utilizada.
+            As fotos da sala, da fachada e dos equipamentos aguardam envio e autorização de uso.
+            Nenhuma imagem de outro consultório foi utilizada.
           </p>
         )}
       </div>
