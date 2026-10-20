@@ -14,6 +14,8 @@ const navigation = [
 ] as const;
 
 export function Brand({ variant = "mark" }: { variant?: "mark" | "full" }) {
+  const logo = variant === "full" ? "/images/logo-diamante.png" : "/images/logo-rebeca-galdino.png";
+
   return (
     <Link
       to="/"
@@ -23,13 +25,12 @@ export function Brand({ variant = "mark" }: { variant?: "mark" | "full" }) {
       <span className="brand-copy">
         <img
           className="brand-logo"
-          src="/images/logo-rebeca-galdino.png"
+          src={logo}
           alt=""
-          width="1080"
-          height="350"
+          width={variant === "full" ? 535 : 1080}
+          height={variant === "full" ? 465 : 350}
           decoding="async"
         />
-        <span className="brand-sub">Cirurgiã-dentista</span>
       </span>
     </Link>
   );
