@@ -1,8 +1,6 @@
-import portrait from '@/assets/rebeca.webp.asset.json';
-import digital from '@/assets/rebeca-digital.webp.asset.json';
-import atendimento from '@/assets/rebeca-atendimento.webp.asset.json';
-export const photos = { portrait: portrait.url, digital: digital.url, atendimento: atendimento.url };
+export const photos = { portrait: '/images/dra-rebeca-galdino.jpg' };
 export const whatsapp = 'https://wa.me/5511996514034';
+export const instagram = 'https://www.instagram.com/drarebecagaldino/';
 export const maps = 'https://www.google.com/maps/dir/?api=1&destination=Av.+Jan+Antonin+Bata,+121,+Piracaia,+SP';
 export const address = 'Av. Jan Antonin Bata, 121, Piracaia — SP';
 export const email = 'rebecah_galdino@hotmail.com';
