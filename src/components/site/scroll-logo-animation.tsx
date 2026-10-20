@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
 const FRAME_COUNT = 300;
-const MOBILE_START_FRAME = 44;
-const MOBILE_ASSEMBLY_END_FRAME = 59;
-const MOBILE_ASSEMBLY_PROGRESS = 0.45;
 const FRAME_DIRECTORY = "/frameia-sequencia";
 const FRAME_CROP = { x: 280, y: 72, width: 720, height: 648 };
 const CHROMA_KEY = { red: 61, green: 137, blue: 66, threshold: 5, feather: 64 };
@@ -21,20 +18,7 @@ export function getMobileScrollProgress(
 
 export function getMobileAnimationFrame(progress: number) {
   const normalizedProgress = Math.max(0, Math.min(1, progress));
-  if (normalizedProgress <= MOBILE_ASSEMBLY_PROGRESS) {
-    return Math.round(
-      MOBILE_START_FRAME +
-        (MOBILE_ASSEMBLY_END_FRAME - MOBILE_START_FRAME) *
-          (normalizedProgress / MOBILE_ASSEMBLY_PROGRESS),
-    );
-  }
-
-  const rotationProgress =
-    (normalizedProgress - MOBILE_ASSEMBLY_PROGRESS) / (1 - MOBILE_ASSEMBLY_PROGRESS);
-  return Math.round(
-    MOBILE_ASSEMBLY_END_FRAME +
-      rotationProgress * (FRAME_COUNT - 1 - MOBILE_ASSEMBLY_END_FRAME),
-  );
+  return Math.round(normalizedProgress * (FRAME_COUNT - 1));
 }
 
 export function ScrollLogoAnimation() {
